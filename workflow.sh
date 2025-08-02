@@ -5,13 +5,13 @@
 readonly SCREENSHOTS_DIR="${HOME}/MyFiles/Pictures/Screenshots"
 readonly PIPE="${SCREENSHOTS_DIR}/process_screenshots"
 
-readonly HOMEBREW_DIR=/opt/homebrew/bin
+readonly HOMEBREW_PREFIX=/opt/homebrew
 
 readonly EXECUTABLE_DIR="${HOME}/.local/bin/process_screenshots"
 readonly TAG_FILES_DIR="${HOME}/.local/share/exiftool"
 
 export -Ua path
-path=("$EXECUTABLE_DIR" "$HOMEBREW_DIR" ${==path})
+path=("$EXECUTABLE_DIR" "${HOMEBREW_PREFIX}/bin" "${HOMEBREW_PREFIX}/opt/libarchive/bin" ${==path})
 
 ################################################################################
 
