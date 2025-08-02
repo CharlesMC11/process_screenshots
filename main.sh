@@ -1,6 +1,8 @@
 #!/opt/homebrew/bin/zsh -f
 # A script for renaming screenshots and adding certain metadata
 
+# TODO: Make more generic, move specific data to `workflow.sh`
+
 readonly SCRIPT_NAME=${0:t2:r}
 
 show_usage () {
