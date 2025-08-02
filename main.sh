@@ -77,7 +77,7 @@ exiftool ${is_verbose:+'-v'} -P -struct     ${==screenshot_files}\
     '-MaxAvailHeight<ImageHeight'           '-MaxAvailWidth<ImageWidth'\
     '-RawFileName<FileName'                 '-PreservedFileName<FileName'\
     "-Software=$(sw_vers --productVersion)" "-Model=${hardware}"\
-    ${=tag_files}
+    ${=tag_files}                           || exit 3
 
 if (($? == 0)); then
     readonly archive="${output_dir}/Screenshots_$(date +%y%m%d_%H%M%S).tar.gz"
