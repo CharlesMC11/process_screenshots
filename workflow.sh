@@ -25,5 +25,6 @@ fi
 # executes the rest of the script body.
 mkfifo "$PIPE" && trap 'rm "$PIPE"' EXIT
 
-main -v -i "${SCREENSHOTS_DIR}/.tmp" -o "$SCREENSHOTS_DIR"\
-    "${TAG_FILES_DIR}/charlesmc.args" "${TAG_FILES_DIR}/screenshot.args"
+main -v --input "${SCREENSHOTS_DIR}/.tmp" --output "$SCREENSHOTS_DIR"\
+    --tag "${TAG_FILES_DIR}/charlesmc.args"\
+    --tag "${TAG_FILES_DIR}/screenshot.args"
