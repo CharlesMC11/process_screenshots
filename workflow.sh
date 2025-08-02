@@ -1,0 +1,29 @@
+#!/opt/homebrew/bin/zsh -f
+# A script for preparing `process_screenshots/main.sh`. It will be sourced by a
+# Folder Action
+
+readonly SCREENSHOTS_DIR="${HOME}/MyFiles/Pictures/Screenshots"
+readonly PIPE="${SCREENSHOTS_DIR}/process_screenshots"
+
+readonly HOMEBREW_DIR=/opt/homebrew/bin
+
+readonly EXECUTABLE_DIR="${HOME}/.local/bin/process_screenshots"
+readonly TAG_FILES_DIR="${HOME}/.config/exiftool"
+
+export -Ua path
+path=("$EXECUTABLE_DIR" "$HOMEBREW_DIR" ${==path})
+
+################################################################################
+
+if [[ -p $PIPE ]]; then
+    echo "Pipe '${PIPE}' exists; Folder action already in progress" 1>&2
+    exit 1
+fi
+# Taking multiple screenshots in succession causes the Folder Action to trigger
+# the same amount of times. Checking for this temporary pipe in the `if`
+# statement above ensures that only the first instance of the Folder Action
+# executes the rest of the script body.
+mkfifo "$PIPE" && trap 'rm "$PIPE"' EXIT
+
+main -v -i "${SCREENSHOTS_DIR}/.tmp" -o "$SCREENSHOTS_DIR"\
+    "${TAG_FILES_DIR}/charlesmc.args" "${TAG_FILES_DIR}/screenshot.args"
