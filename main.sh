@@ -50,6 +50,8 @@ while (($#)); do
     shift
 done
 
+# TODO: Try to match the PCRE pattern below, so it can match
+# `*(YY)YYMMDD?hhmmss*.*` filenames too
 readonly orig_filename_pattern='*2<-1><-9><-9>-<-1><-9>-<-3><-9>*<-2><-9>.<-5><-9>.<-5><-9>*.*(.N)'
 declare -Ua screenshot_files
 readonly screenshot_files=(${~orig_filename_pattern})
@@ -61,7 +63,7 @@ fi
 readonly timezone=$(date +%z)
 
 # PERL string replacement patterns that will be used by ExifTool
-readonly re='^.+?(2[0-1])(\d{2})-([0-1]\d)-([0-3]\d).+([0-2]\d)\.([0-5]\d)\.([0-5]\d)(\s\(\d+?\))?\..+?$'
+readonly re='^.*?([1-2][^2-8])?(\d{2})\D?([0-1]\d)\D?([0-3]\d)\D*?([0-2]\d)\D?([0-5]\d)\D?([0-5]\d)(.*?)?\..+?$'
 readonly orig_str_pattern="Filename;s/${re}"
 readonly new_filename_pattern="\${${orig_str_pattern}/\$2\$3\$4_\$5\$6\$7\$8.%e/}"
 readonly new_datetime_pattern="\${${orig_str_pattern}/\$1\$2-\$3-\$4T\$5:\$6:\$7${timezone}/}"
