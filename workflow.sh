@@ -8,7 +8,7 @@ readonly PIPE="${SCREENSHOTS_DIR}/process_screenshots"
 readonly HOMEBREW_DIR=/opt/homebrew/bin
 
 readonly EXECUTABLE_DIR="${HOME}/.local/bin/process_screenshots"
-readonly TAG_FILES_DIR="${HOME}/.config/exiftool"
+readonly TAG_FILES_DIR="${HOME}/.local/share/exiftool"
 
 export -Ua path
 path=("$EXECUTABLE_DIR" "$HOMEBREW_DIR" ${==path})
