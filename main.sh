@@ -79,9 +79,7 @@ exiftool ${is_verbose:+'-v'} -P -struct     ${==screenshot_files}\
     "-Software=$(sw_vers --productVersion)" "-Model=${hardware}"\
     ${=tag_files}                           || exit 3
 
-if (($? == 0)); then
-    readonly archive="${output_dir}/Screenshots_$(date +%y%m%d_%H%M%S).tar.gz"
-    tar -czf $archive ${is_verbose:+'-v'} --options gzip:compression-level=1  ${==screenshot_files}
+tar -czf "${output_dir}/Screenshots_$(date +%y%m%d_%H%M%S).tar.gz"\
+    ${is_verbose:+'-v'} --options gzip:compression-level=1 ${==screenshot_files}
 
-    rm ${==screenshot_files}
-fi
+rm ${==screenshot_files}
