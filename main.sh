@@ -1,12 +1,18 @@
 #!/opt/homebrew/bin/zsh -f
 # A script for renaming screenshots and adding certain metadata
 
-# TODO: Make more generic, move specific data to `workflow.sh`
-
 readonly SCRIPT_NAME=${0:t2:r}
 
 show_usage () {
-    echo "usage: ${SCRIPT_NAME} [-v | --verbose, -h | --help ] [-i | --input source] [-o | --output target] [*.args arg files]" 1>&2
+    echo "usage: ${SCRIPT_NAME}\n\
+        -v  --verbose\n\
+        -h  --help \n\
+        -i  --input    (default = current directory)\n\
+        -o  --output   (default = current directory)\n\
+        -tz --timezone (default = system timezone)\n\
+        -sw --software (default = system software)\n\
+        -hw --hardware (default = system hardware)\n\
+        *.args arg files" 1>&2
 }
 
 error_on_invalid_option () {
@@ -31,23 +37,36 @@ error_if_not_dir () {
 ################################################################################
 
 # TODO: Use `zparseopts` later?
+# TODO: Make more generic, move specific data to `workflow.sh`
+
 output_dir=$PWD
+timezone=$(date +%z)
+software=$(sw_vers --productVersion)
+hardware=$(system_profiler SPHardwareDataType | sed -En 's/^.*Model Name: //p')
 declare -Ua tag_files
 while (($#)); do
     case $1 in
-        -h | --help   ) show_usage; exit
+        -h  | --help    ) show_usage; exit
         ;;
-        -v | --verbose) integer -r is_verbose=1
+        -v  | --verbose ) is_verbose=1
         ;;
-        -i | --input  ) error_if_not_dir Input $2; cd "$2"; shift
+        -i  | --input   ) error_if_not_dir Input $2; cd "$2"; shift
         ;;
-        -o | --output ) error_if_not_dir Output $2; output_dir=$2; shift
+        -o  | --output  ) error_if_not_dir Output $2; output_dir=$2; shift
         ;;
-        -* | --*      ) error_on_invalid_option $1
+        -tz | --timezone) timezone=$2; shift
         ;;
-        *.args        ) tag_files+="-@ $1"
+        -sw | --software) software=$2; shift
         ;;
-        *             ) error_on_invalid_option $1
+        -hw | --hardware) hardware=$2; shift
+        ;;
+        -tg | --tag     ) tag_files+="-@ $2"; shift
+        ;;
+        --              ) shift; break
+        ;;
+        -*  | --*       ) error_on_invalid_option $1
+        ;;
+        *               ) error_on_invalid_option $1
         ;;
     esac
     shift
@@ -63,22 +82,18 @@ if ((${#screenshot_files} == 0)); then
     exit 2
 fi
 
-readonly timezone=$(date +%z)
-
 # PERL string replacement patterns that will be used by ExifTool
 readonly re='^.*?([1-2][^2-8])?(\d{2})\D?([0-1]\d)\D?([0-3]\d)\D*?([0-2]\d)\D?([0-5]\d)\D?([0-5]\d)(.*?)?\..+?$'
 readonly orig_str_pattern="Filename;s/${re}"
 readonly new_filename_pattern="\${${orig_str_pattern}/\$2\$3\$4_\$5\$6\$7\$8.%e/}"
 readonly new_datetime_pattern="\${${orig_str_pattern}/\$1\$2-\$3-\$4T\$5:\$6:\$7${timezone}/}"
 
-readonly hardware=$(system_profiler SPHardwareDataType | sed -En 's/^.*Model Name: //p')
-
 exiftool ${is_verbose:+'-v'} -P -struct     ${==screenshot_files}\
     "-directory=${output_dir}"              "-Filename<${new_filename_pattern}"\
     "-AllDates<${new_datetime_pattern}"     "-OffsetTime*=${timezone}"\
     '-MaxAvailHeight<ImageHeight'           '-MaxAvailWidth<ImageWidth'\
     '-RawFileName<FileName'                 '-PreservedFileName<FileName'\
-    "-Software=$(sw_vers --productVersion)" "-Model=${hardware}"\
+    "-Software=${software}"                 "-Model=${hardware}"\
     ${=tag_files}                           || exit 3
 
 tar -czf "${output_dir}/Screenshots_$(date +%y%m%d_%H%M%S).tar.gz"\
