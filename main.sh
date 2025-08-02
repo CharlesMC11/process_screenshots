@@ -28,6 +28,7 @@ error_if_not_dir () {
 
 ################################################################################
 
+# TODO: Use `zparseopts` later?
 output_dir=$PWD
 declare -Ua tag_files
 while (($#)); do
