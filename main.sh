@@ -79,9 +79,8 @@ exiftool ${is_verbose:+'-v'} -P -struct     ${==screenshot_files}\
     ${=tag_files}
 
 if (($? == 0)); then
-    readonly archive="${output_dir}/Screenshots_$(date +%y%m%d_%H%M%S).tar"
-    tar -cf "$archive" ${==screenshot_files}
-    gzip ${is_verbose:+'-v'} -1 "$archive"
+    readonly archive="${output_dir}/Screenshots_$(date +%y%m%d_%H%M%S).tar.gz"
+    tar -czf $archive ${is_verbose:+'-v'} --options gzip:compression-level=1  ${==screenshot_files}
 
     rm ${==screenshot_files}
 fi
