@@ -4,15 +4,17 @@
 readonly SCRIPT_NAME=${0:t2:r}
 
 show_usage () {
-    echo "usage: ${SCRIPT_NAME}\n\
-        -v  --verbose\n\
-        -h  --help \n\
-        -i  --input    (default = current directory)\n\
-        -o  --output   (default = current directory)\n\
-        -tz --timezone (default = system timezone)\n\
-        -sw --software (default = system software)\n\
-        -hw --hardware (default = system hardware)\n\
-        *.args arg files" 1>&2
+    cat 1>&2 << EOF
+usage: ${SCRIPT_NAME}
+    -v  --verbose
+    -h  --help
+    -i  --input    (default = current directory)
+    -o  --output   (default = current directory)
+    -tz --timezone (default = system timezone)
+    -sw --software (default = system software)
+    -hw --hardware (default = system hardware)
+    *.args arg files
+EOF
 }
 
 error_on_invalid_option () {
