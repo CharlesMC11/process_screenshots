@@ -74,9 +74,8 @@ while (($#)); do
     shift
 done
 
-# TODO: Try to match the PCRE pattern below, so it can match
-# `*(YY)YYMMDD?hhmmss*.*` filenames too
-readonly orig_filename_pattern='*2<-1><-9><-9>-<-1><-9>-<-3><-9>*<-2><-9>.<-5><-9>.<-5><-9>*.*(.N)'
+setopt EXTENDED_GLOB
+readonly orig_filename_pattern='*<19-21>#<-99>[^[:digit:]]#<-12>[^[:digit:]]#<-31>[^[:digit:]]#<-23>[^[:digit:]]#<-59>[^[:digit:]]#<-59>*.*(.N)'
 declare -Ua screenshot_files
 readonly screenshot_files=(${~orig_filename_pattern})
 if ((${#screenshot_files} == 0)); then
