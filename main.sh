@@ -12,7 +12,7 @@ show_usage () {
     -tz --timezone (default = system timezone)\n\
     -sw --software (default = system software)\n\
     -hw --hardware (default = system hardware)\n\
-    *.args arg files"
+    -tg --tag      arg files"
 }
 
 error_on_invalid_option () {
@@ -61,8 +61,6 @@ while (($#)); do
         -hw | --hardware) hardware=$2; shift
         ;;
         -tg | --tag     ) tag_files+="-@ $2"; shift
-        ;;
-        --              ) shift; break
         ;;
         -*  | --*       ) error_on_invalid_option $1
         ;;
