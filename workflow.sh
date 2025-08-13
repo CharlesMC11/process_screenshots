@@ -2,13 +2,13 @@
 # A script for preparing `process_screenshots/main.sh`. It will be sourced by a
 # Folder Action
 
-readonly SCREENSHOTS_DIR="${HOME}/MyFiles/Pictures/Screenshots"
-readonly PIPE="${SCREENSHOTS_DIR}/process_screenshots"
+readonly SCREENSHOTS_DIR=${HOME}/MyFiles/Pictures/Screenshots
+readonly PIPE=${SCREENSHOTS_DIR}/process_screenshots
 
 readonly HOMEBREW_PREFIX=/opt/homebrew
 
-readonly EXECUTABLE_DIR="${HOME}/.local/bin/process_screenshots"
-readonly TAG_FILES_DIR="${HOME}/.local/share/exiftool"
+readonly EXECUTABLE_DIR=${HOME}/.local/bin/process_screenshots
+readonly TAG_FILES_DIR=${HOME}/.local/share/exiftool
 
 export -Ua path
 path=("$EXECUTABLE_DIR" "${HOMEBREW_PREFIX}/bin" "${HOMEBREW_PREFIX}/opt/libarchive/bin" ${==path})
@@ -25,6 +25,6 @@ fi
 # executes the rest of the script body.
 mkfifo "$PIPE" && trap 'rm "$PIPE"' EXIT
 
-main -v --input "${SCREENSHOTS_DIR}/.tmp" --output "$SCREENSHOTS_DIR"\
+main --verbose --input "${SCREENSHOTS_DIR}/.tmp" --output "$SCREENSHOTS_DIR"\
     --tag "${TAG_FILES_DIR}/charlesmc.args"\
     --tag "${TAG_FILES_DIR}/screenshot.args"
