@@ -85,13 +85,14 @@ readonly orig_str_pattern="Filename;s/${re}"
 readonly new_filename_pattern="\${${orig_str_pattern}/\$2\$3\$4_\$5\$6\$7\$8.%e/}"
 readonly new_datetime_pattern="\${${orig_str_pattern}/\$1\$2-\$3-\$4T\$5:\$6:\$7${timezone}/}"
 
-exiftool ${is_verbose:+'-v'} -P -struct     ${==screenshot_files}\
-    "-directory=${output_dir}"              "-Filename<${new_filename_pattern}"\
-    "-AllDates<${new_datetime_pattern}"     "-OffsetTime*=${timezone}"\
-    '-MaxAvailHeight<ImageHeight'           '-MaxAvailWidth<ImageWidth'\
-    '-RawFileName<FileName'                 '-PreservedFileName<FileName'\
-    "-Software=${software}"                 "-Model=${hardware}"\
-    ${=tag_files}                           || exit 3
+exiftool "-Directory=${output_dir}"          "-Filename<${new_filename_pattern}"\
+         "-AllDates<${new_datetime_pattern}" "-OffsetTime*=${timezone}"\
+         '-MaxAvailHeight<ImageHeight'       '-MaxAvailWidth<ImageWidth'\
+         "-Software=${software}"             "-Model=${hardware}"\
+         '-RawFileName<FileName'             '-PreservedFileName<FileName'\
+         -struct          -preserve          ${is_verbose:+'-verbose'}\
+         ${=tag_files}                       --\
+         ${==screenshot_files}               || exit 3
 
 tar -czf "${output_dir}/Screenshots_$(date +%y%m%d_%H%M%S).tar.gz"\
     ${is_verbose:+'-v'} --options gzip:compression-level=1 ${==screenshot_files}
