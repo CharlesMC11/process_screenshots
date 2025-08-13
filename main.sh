@@ -36,9 +36,6 @@ error_if_not_dir () {
 
 ################################################################################
 
-# TODO: Use `zparseopts` later?
-# TODO: Make more generic, move specific data to `workflow.sh`
-
 output_dir=$PWD
 timezone=$(date +%z)
 software=$(sw_vers --productVersion)
@@ -48,7 +45,7 @@ while (($#)); do
     case $1 in
         -h  | --help    ) show_usage; exit
         ;;
-        -v  | --verbose ) is_verbose=1
+        -v  | --verbose ) integer -r is_verbose=1
         ;;
         -i  | --input   ) error_if_not_dir Input $2; cd "$2"; shift
         ;;
